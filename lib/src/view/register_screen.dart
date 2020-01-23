@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:registration_app/src/bloc/register_bloc.dart';
+import 'package:registration_app/src/bloc/data_diri_bloc.dart';
 import 'package:registration_app/src/view/data_diri_form.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -17,8 +17,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         appBar: AppBar(
           title: Text('Data Diri Form'),
         ),
-        body: BlocProvider<RegisterBloc>(
-          create: (context) => RegisterBloc(),
+        body: BlocProvider<DataDiriBloc>(
+          create: (context) => DataDiriBloc(),
           child: DataDiriForm(),
         )
     );
