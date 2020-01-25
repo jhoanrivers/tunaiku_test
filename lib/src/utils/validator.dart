@@ -41,6 +41,12 @@ class Validator{
     }
   }
 
+  static bool isNoRekeningMin8Angka(String input){
+    if(input.length < 8){
+      return false;
+    } else return true;
+  }
+
   static bool isKtpNumberAllValid(String ktpNumber){
     if(isNumber(ktpNumber) && isLength16(ktpNumber) && isNotNull(ktpNumber)){
       return true;
