@@ -11,14 +11,27 @@ abstract class AlamatKtpEvent extends Equatable{
   List<Object> get props => [];
 }
 
+
+class FetchProvinsi extends AlamatKtpEvent{}
+
+
 class SubmittedAlamat extends AlamatKtpEvent{
   final String alamatKtp;
+  final String tempatTinggal;
+  final String provinsi;
+  final String noBlok;
 
-  SubmittedAlamat({@required this.alamatKtp}) : assert(alamatKtp != null);
+
+  SubmittedAlamat({
+  @required this.tempatTinggal,
+  @required this.provinsi,
+  @required this.noBlok,
+  @required this.alamatKtp
+  }) : assert(alamatKtp != null);
 
   @override
   List<Object> get props => [
-    alamatKtp
+    alamatKtp, tempatTinggal, provinsi, noBlok
   ];
 
 }
