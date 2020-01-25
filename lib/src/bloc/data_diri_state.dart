@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 abstract class DataDiriState extends Equatable {
+
   final List mProps;
   DataDiriState([this.mProps = const []]);
 

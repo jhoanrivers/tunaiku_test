@@ -20,10 +20,12 @@ class DataDiriBloc extends Bloc<DataDiriEvent, DataDiriState>{
       try {
         if(Validator.isKtpNumberAllValid(event.ktpNumber)
             && Validator.isNamaLengkapAllValid(event.namaLengkap)
-            && Validator.isTanggalValid(event.tanggalLahir)){
+            && Validator.isTanggalValid(event.tanggalLahir)
+            && Validator.isNoRekeningMin8Angka(event.noRekening)){
 
           dataSaved.ktpNumber = event.ktpNumber;
           dataSaved.namaLengkap = event.namaLengkap;
+          dataSaved.noRekening = event.noRekening;
           dataSaved.pendidikan = event.pendidikan;
           dataSaved.tanggalLahir = event.tanggalLahir;
 

@@ -28,6 +28,8 @@ class _DataDiriFormState extends State<DataDiriForm> {
   String _tanggalLahir = "-/ -/ -";
   final _ktpNumber = TextEditingController();
   final _namaLengkap = TextEditingController();
+  final _nomorRekening = TextEditingController();
+
   bool validatePendikan = false;
   bool validateTanggalLahir = false;
 
@@ -52,10 +54,9 @@ class _DataDiriFormState extends State<DataDiriForm> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  // Nomor KTP
                   TextFormField(
                     decoration: InputDecoration(
-                        labelText: 'No KTP',
+                        labelText: 'No. KTP',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide()
@@ -90,8 +91,28 @@ class _DataDiriFormState extends State<DataDiriForm> {
                   SizedBox(
                     height: 20,
                   ),
+                  // Nama Lengkap
+                  TextFormField(
+                    decoration: InputDecoration(
+                        labelText: 'Nomor Rekening',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide()
+                        )
+                    ),
+                    keyboardType: TextInputType.text,
+                    autocorrect: false,
+                    autofocus: false,
+                    autovalidate: true,
+                    controller: _nomorRekening,
+                    validator: _validateNoRekening,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   FormField<String>(
                     builder: (FormFieldState<String> state) {
+//                      FocusScope.of(context).requestFocus(FocusNode());
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -132,6 +153,7 @@ class _DataDiriFormState extends State<DataDiriForm> {
 
                   FormField<String>(
                     builder: (FormFieldState<String> state) {
+//                      FocusScope.of(context).requestFocus(FocusNode());
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -165,11 +187,9 @@ class _DataDiriFormState extends State<DataDiriForm> {
                       );
                     },
                   ),
-
                   SizedBox(
                     height: 40,
                   ),
-
                   Container(
                     alignment: Alignment.bottomRight,
                     margin: EdgeInsets.only(right: 0),
@@ -190,7 +210,6 @@ class _DataDiriFormState extends State<DataDiriForm> {
               )
             ]
           );
-
         },
 
       ),
@@ -216,6 +235,7 @@ class _DataDiriFormState extends State<DataDiriForm> {
         tanggalLahir: _tanggalLahir,
         namaLengkap: _namaLengkap.text,
         pendidikan: curentPendidikan,
+        noRekening: _nomorRekening.text,
       )
     );
   }
@@ -223,28 +243,35 @@ class _DataDiriFormState extends State<DataDiriForm> {
 
   String _validateKtpNum(String value){
 
-    if(value.isEmpty){
+    if(value.isEmpty)
       return "";
-    }
-    if (double.tryParse(value) == null) {
+    if (double.tryParse(value) == null)
       return "No KTP terdiri dari angka";
-    }
-    if (value.length != 16) {
+    if (value.length != 16)
       return "No KTP harus berjumlah 16 digit";
-    }
+
       return null;
   }
 
   String _validateCompleteName(String value){
-    if(value.isEmpty){
+    if(value.isEmpty)
       return "";
-    }
-    if (!value.contains(RegExp(r'[a-z]'))){
+    if (value.contains(RegExp(r'[0-9]')))
       return "Nama hanya berupa huruf";
-    }
-    if(value.length > 10){
+    if(value.length > 10)
       return "Maksimal kata adalah 10 huruf";
-    }
+
+  }
+
+  String _validateNoRekening (String input){
+    if(input.isEmpty)
+      return '';
+    if(!input.contains(RegExp(r'[0-9]')))
+      return 'No rekening hanya berupa angka';
+
+    if(input.length < 8)
+      return 'No rekening minimal 8 angka';
+
   }
 
 

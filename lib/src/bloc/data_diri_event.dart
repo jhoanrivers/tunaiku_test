@@ -13,10 +13,12 @@ class Submitted extends DataDiriEvent{
 
   final String ktpNumber;
   final String namaLengkap;
+  final String noRekening;
   final String pendidikan;
   final String tanggalLahir;
 
   Submitted({
+    @required this.noRekening,
     @required this.namaLengkap,
     @required this.pendidikan,
     @required this.tanggalLahir,
@@ -27,6 +29,7 @@ class Submitted extends DataDiriEvent{
   List<Object> get props =>[
     ktpNumber,
     namaLengkap,
+    noRekening,
     pendidikan,
     tanggalLahir
   ];
