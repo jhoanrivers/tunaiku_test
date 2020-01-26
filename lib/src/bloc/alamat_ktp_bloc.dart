@@ -31,15 +31,17 @@ class AlamatKtpBloc extends Bloc<AlamatKtpEvent,AlamatKtpState>{
     }
 
     if (event is SubmittedAlamat){
-      yield AlamatKtpLoadingState();
       try{
-        if(Validator.isNotNull(event.alamatKtp))
-          print('HAHA');
+        if(Validator.isNotNull(event.alamatKtp)
+        && Validator.isNotNull(event.tempatTinggal)
+        && Validator.isNotNull(event.provinsi)
+        && Validator.isNotNull(event.noBlok)) {
+          yield AlamatKtpAfterDataValidState(isValide: true);
 
+        }
       }catch(_){
         yield AlamatKtpErrorState();
       }
-
 
     }
 

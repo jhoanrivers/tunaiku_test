@@ -27,11 +27,14 @@ class SubmittedAlamat extends AlamatKtpEvent{
   @required this.provinsi,
   @required this.noBlok,
   @required this.alamatKtp
-  }) : assert(alamatKtp != null);
+  });
 
   @override
   List<Object> get props => [
-    alamatKtp, tempatTinggal, provinsi, noBlok
+    alamatKtp,
+    tempatTinggal,
+    provinsi,
+    noBlok
   ];
 
 }
