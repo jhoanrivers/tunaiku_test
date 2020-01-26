@@ -8,7 +8,9 @@ import 'package:registration_app/src/bloc/data_diri_bloc.dart';
 import 'package:registration_app/src/bloc/data_diri_event.dart';
 import 'package:registration_app/src/bloc/data_diri_state.dart';
 import 'package:registration_app/src/utils/pendidikan.dart';
+import 'package:registration_app/src/utils/validator.dart';
 import 'package:registration_app/src/view/alamat_ktp_form.dart';
+import 'package:registration_app/src/view/alamat_ktp_screen.dart';
 
 import '../utils/pendidikan.dart';
 
@@ -40,7 +42,9 @@ class _DataDiriFormState extends State<DataDiriForm> {
       listener: (context, state){
         if(state is DataDiriSuccess){
           if(state.isValidate == true){
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>AlamatKtpForm()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                AlamatKtpScreen(_ktpNumber.text,_namaLengkap.text,_nomorRekening.text,curentPendidikan,_tanggalLahir))
+            );
           } else{
             _validate = true;
           }
@@ -67,7 +71,7 @@ class _DataDiriFormState extends State<DataDiriForm> {
                     autovalidate: true,
                     autofocus: false,
                     controller: _ktpNumber,
-                    validator: _validateKtpNum,
+                    validator: Validator.validateKtpNum,
                   ),
                   SizedBox(
                     height: 20,
@@ -86,7 +90,7 @@ class _DataDiriFormState extends State<DataDiriForm> {
                     autofocus: false,
                     autovalidate: true,
                     controller: _namaLengkap,
-                    validator: _validateCompleteName,
+                    validator: Validator.validateCompleteName,
                   ),
                   SizedBox(
                     height: 20,
@@ -105,7 +109,7 @@ class _DataDiriFormState extends State<DataDiriForm> {
                     autofocus: false,
                     autovalidate: true,
                     controller: _nomorRekening,
-                    validator: _validateNoRekening,
+                    validator: Validator.validateNoRekening,
                   ),
                   SizedBox(
                     height: 20,
@@ -241,38 +245,6 @@ class _DataDiriFormState extends State<DataDiriForm> {
   }
 
 
-  String _validateKtpNum(String value){
-
-    if(value.isEmpty)
-      return "";
-    if (double.tryParse(value) == null)
-      return "No KTP terdiri dari angka";
-    if (value.length != 16)
-      return "No KTP harus berjumlah 16 digit";
-
-      return null;
-  }
-
-  String _validateCompleteName(String value){
-    if(value.isEmpty)
-      return "";
-    if (value.contains(RegExp(r'[0-9]')))
-      return "Nama hanya berupa huruf";
-    if(value.length > 10)
-      return "Maksimal kata adalah 10 huruf";
-
-  }
-
-  String _validateNoRekening (String input){
-    if(input.isEmpty)
-      return '';
-    if(!input.contains(RegExp(r'[0-9]')))
-      return 'No rekening hanya berupa angka';
-
-    if(input.length < 8)
-      return 'No rekening minimal 8 angka';
-
-  }
 
 
 }

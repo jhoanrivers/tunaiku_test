@@ -8,235 +8,235 @@ import 'package:registration_app/src/bloc/alamat_ktp_event.dart';
 import 'package:registration_app/src/bloc/alamat_ktp_state.dart';
 import 'package:registration_app/src/model/semua_provinsi.dart';
 import 'package:registration_app/src/utils/tempat_tinggal.dart';
+import 'package:registration_app/src/utils/validator.dart';
+import 'package:registration_app/src/view/review_data.dart';
 
 class AlamatKtpForm extends StatefulWidget {
+
+  final String ktpNumber;
+  final String namaLengkap;
+  final String nomorRekening;
+  final String currentPendidikan;
+  final String tanggalLahir;
+
+  AlamatKtpForm(this.ktpNumber, this.namaLengkap, this.nomorRekening, this.currentPendidikan, this.tanggalLahir);
+
+
   @override
   _AlamatKtpFormState createState() => _AlamatKtpFormState();
 }
 
 class _AlamatKtpFormState extends State<AlamatKtpForm> {
 
-  final _alamatKtp = TextEditingController();
-  final _blokRumah = TextEditingController();
+  var _alamatKtp = TextEditingController();
+  var _blokRumah = TextEditingController();
 
   AlamatKtpBloc alamatKtpBloc;
   bool validateTempatTinggal = false;
   TempatTinggal tempatTinggal;
   String currentTempatTinggal;
+  String dropdownValue;
   List<SemuaProvinsi> data;
+  var _updateProvinsi;
 
   @override
   void initState() {
     super.initState();
-//    alamatKtpBloc = BlocProvider.of<AlamatKtpBloc>(context);
-//    alamatKtpBloc.add(FetchProvinsi());
   }
 
-  String dropdownValue;
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Alamat KTP Form'),
-      ),
-      body: BlocProvider<AlamatKtpBloc>(
-        create: (context) => AlamatKtpBloc(repository: Repository())..add(FetchProvinsi()),
-        child: BlocBuilder<AlamatKtpBloc,AlamatKtpState>(
-          builder: (context, state){
+    return BlocListener<AlamatKtpBloc, AlamatKtpState>(
+      listener: (BuildContext context, AlamatKtpState state) {
 
+        if(state is AlamatKtpAfterDataValidState)
+          if(state.isValide == true){
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                ReviewData(widget.ktpNumber,
+                  widget.namaLengkap,
+                  widget.nomorRekening,
+                  widget.currentPendidikan,
+                  widget.tanggalLahir,
+                  _alamatKtp.text,
+                  currentTempatTinggal,
+                  _updateProvinsi,
+                  _blokRumah.text
 
-            if(state is AlamatKtpSuccessState){
-              data = state.provs;
-              print(data);
-            }
+                )));
+          }
+      },
+      child: BlocBuilder<AlamatKtpBloc,AlamatKtpState>(
+        builder: (context, state){
 
-            if(state is AlamatKtpLoadingState){
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+          if(state is AlamatKtpSuccessState){
+            data = state.provs;
+          }
 
+          if(state is AlamatKtpLoadingState){
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
+          return ListView(
+            padding: EdgeInsets.all(20),
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Alamat KTP',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide()
+                      ),
+                    ),
+                    keyboardType: TextInputType.text,
+                    autocorrect: false,
+                    maxLines: 3,
+                    autovalidate: true,
+                    controller: _alamatKtp,
+                    validator: Validator.alamatValidate,
+                  ),
 
-            return ListView(
-              padding: EdgeInsets.all(20),
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Alamat KTP',
+                  SizedBox(
+                    height: 20,
+                  ),
+                  FormField<String>(
+                    builder: (FormFieldState<String> state) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          InputDecorator(
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(0.0),
+                              labelText: 'Tempat Tinggal',
+                              errorText: validateTempatTinggal
+                                  ? "Required"
+                                  : null,
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<TempatTinggal>(
+                                hint: Text('Pilih tempat tinggal'),
+                                value: tempatTinggal,
+                                elevation: 1,
+                                items: TempatTinggal.values.map((value) {
+                                  String tempTempatTinggal = enumToTempatTinggal(
+                                      value);
+                                  return DropdownMenuItem<TempatTinggal>(
+                                    child: Text(tempTempatTinggal),
+                                    value: value,
+                                  );
+                                }).toList(),
+                                onChanged: (TempatTinggal value) {
+                                  setState(() {
+                                    currentTempatTinggal =
+                                        enumToTempatTinggal(value);
+
+//                                        print(currentTempatTinggal);
+                                    tempatTinggal = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  FormField<String>(
+                    builder: (FormFieldState<String> state) {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          InputDecorator(
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(0.0),
+                              labelText: 'Provinsi',
+                              errorText: validateTempatTinggal
+                                  ? "Required"
+                                  : null,
+                            ),
+                            child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  hint: Text('Pilih provinsi'),
+                                  value: dropdownValue,
+                                  items: data.map<DropdownMenuItem<String>>((value){
+                                    return new DropdownMenuItem(
+                                      child: new Text(value.nama),
+                                      value: value.toString(),
+                                    );
+                                  }
+                                  ).toList(),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      dropdownValue = newValue;
+                                      _updateProvinsi= dropdownValue.substring(20,dropdownValue.length-1);
+                                      print(_updateProvinsi);
+                                    });
+                                  },
+                                )
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                        labelText: 'No. Blok',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide()
-                        ),
-
-                      ),
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      maxLines: 3,
-                      autovalidate: true,
-                      controller: _alamatKtp,
-                      validator: _alamatValidate,
-                    ),
-
-                    SizedBox(
-                      height: 20,
-                    ),
-                    FormField<String>(
-                      builder: (FormFieldState<String> state) {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            InputDecorator(
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(0.0),
-                                labelText: 'Tempat Tinggal',
-                                errorText: validateTempatTinggal
-                                    ? "Required"
-                                    : null,
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<TempatTinggal>(
-                                  hint: Text('Pilih tempat tinggal'),
-                                  value: tempatTinggal,
-                                  elevation: 1,
-                                  items: TempatTinggal.values.map((value) {
-                                    String tempTempatTinggal = enumToTempatTinggal(
-                                        value);
-                                    return DropdownMenuItem<TempatTinggal>(
-                                      child: Text(tempTempatTinggal),
-                                      value: value,
-                                    );
-                                  }).toList(),
-                                  onChanged: (TempatTinggal value) {
-                                    setState(() {
-                                      currentTempatTinggal =
-                                          enumToTempatTinggal(value);
-                                      tempatTinggal = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    FormField<String>(
-                      builder: (FormFieldState<String> state) {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            InputDecorator(
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(0.0),
-                                labelText: 'Provinsi',
-                                errorText: validateTempatTinggal
-                                    ? "Required"
-                                    : null,
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    hint: Text('Pilih provinsi'),
-                                    value: dropdownValue,
-                                    items: data.map<DropdownMenuItem<String>>((value){
-                                      return new DropdownMenuItem(
-                                        child: new Text(value.nama),
-                                        value: value.toString(),
-                                      );
-                                    }
-                                    ).toList(),
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        dropdownValue = newValue;
-                                      });
-                                    },
-                                  )
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: 'No. Blok',
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide()
-                          )
-                      ),
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      autovalidate: true,
-                      autofocus: false,
-                      controller: _blokRumah,
-                      validator: _validateNoBlok,
-                    )
-                  ],
-                ),
-                Container(
-                    alignment: Alignment.bottomCenter,
-                    margin: EdgeInsets.only(right: 0),
-                    child: FlatButton(
-                        padding: EdgeInsets.all(10),
-                        onPressed: (){
-//                         _onButtonAlamatPressed
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Text('Selesai',
-                              style: TextStyle(fontSize: 16),),
-                            Icon(Icons.done)
-                          ],
                         )
-                    )
-                ),
-              ],
+                    ),
+                    keyboardType: TextInputType.text,
+                    autocorrect: false,
+                    autovalidate: true,
+                    autofocus: false,
+                    controller: _blokRumah,
+                    validator: Validator.validateNoBlok,
+                  )
+                ],
+              ),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: RaisedButton(
+                    padding: EdgeInsets.all(10),
+                    onPressed: _onButtonAlamatPressed,
+                    child: Text('Selesai',
+                      style: TextStyle(fontSize: 16),),
+                  )
+              ),
 
-            );
-          },
-        ),
-      )
+            ],
+
+          );
+        },
+      ),
+
     );
-
-  }
-
-
-
-  String _alamatValidate(String value){
-    if(value.isEmpty){
-      return '';
-    }
-    if(value.length > 100){
-      return "Alamat KTP tidak boleh lebih dari 100";
-    }
-
-  }
-
-  String _validateNoBlok(String value){
-
-    if(value.isEmpty){
-      return '';
-    }
-    if (!value.contains(RegExp(r'[a-zA-Z0-9.-]')))
-      return 'Masukkan Blok yang valid';
 
   }
 
   _onButtonAlamatPressed(){
 
+
+    BlocProvider.of<AlamatKtpBloc>(context).add(SubmittedAlamat(
+        noBlok: _blokRumah.text,
+        tempatTinggal: currentTempatTinggal,
+        provinsi: _updateProvinsi,
+        alamatKtp: _alamatKtp.text
+    ));
 
 
   }

@@ -63,6 +63,66 @@ class Validator{
     }
   }
 
+  static String validateNoBlok(String value){
+
+    if(value.isEmpty){
+      return '';
+    }
+    if (!value.contains(RegExp(r'[a-zA-Z0-9.-]')))
+      return 'Masukkan Blok yang valid';
+
+  }
+
+  static String alamatValidate(String value){
+    if(value.isEmpty){
+      return '';
+    }
+    if(value.length > 100){
+      return "Alamat KTP tidak boleh lebih dari 100";
+    }
+
+  }
+
+  static bool validateAlamatKtp(String input){
+    if(input.isEmpty){
+      return true;
+    } else
+      return false;
+  }
+
+
+  static String validateKtpNum(String value){
+
+    if(value.isEmpty)
+      return "Required";
+    if (double.tryParse(value) == null)
+      return "No KTP terdiri dari angka";
+    if (value.length != 16)
+      return "No KTP harus berjumlah 16 digit";
+
+    return null;
+  }
+
+  static String validateCompleteName(String value){
+    if(value.isEmpty)
+      return "Required";
+    if (value.contains(RegExp(r'[0-9]')))
+      return "Nama hanya berupa huruf";
+    if(value.length > 10)
+      return "Maksimal kata adalah 10 huruf";
+
+  }
+
+  static String validateNoRekening (String input){
+    if(input.isEmpty)
+      return 'Required';
+    if(!input.contains(RegExp(r'[0-9]')))
+      return 'No rekening hanya berupa angka';
+
+    if(input.length < 8)
+      return 'No rekening minimal 8 angka';
+
+  }
 
 
 }
