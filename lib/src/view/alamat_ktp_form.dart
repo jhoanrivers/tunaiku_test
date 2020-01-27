@@ -208,14 +208,21 @@ class _AlamatKtpFormState extends State<AlamatKtpForm> {
                   )
                 ],
               ),
-              Align(
-                  alignment: Alignment.bottomCenter,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(10),
-                    onPressed: _onButtonAlamatPressed,
-                    child: Text('Selesai',
-                      style: TextStyle(fontSize: 16),),
-                  )
+              SizedBox(
+                height: 40,
+              ),
+
+              SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
+                  color: Colors.green,
+
+                  padding: EdgeInsets.all(12),
+                  onPressed: _onButtonAlamatPressed,
+                  child: Text('Selesai',
+                    style: TextStyle(fontSize: 16,color: Colors.white),
+                  ),
+                ),
               ),
 
             ],
@@ -229,6 +236,7 @@ class _AlamatKtpFormState extends State<AlamatKtpForm> {
   }
 
   _onButtonAlamatPressed(){
+
 
 
     BlocProvider.of<AlamatKtpBloc>(context).add(SubmittedAlamat(

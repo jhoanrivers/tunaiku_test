@@ -66,7 +66,7 @@ class Validator{
   static String validateNoBlok(String value){
 
     if(value.isEmpty){
-      return '';
+      return 'Required';
     }
     if (!value.contains(RegExp(r'[a-zA-Z0-9.-]')))
       return 'Masukkan Blok yang valid';
@@ -75,7 +75,7 @@ class Validator{
 
   static String alamatValidate(String value){
     if(value.isEmpty){
-      return '';
+      return 'Required';
     }
     if(value.length > 100){
       return "Alamat KTP tidak boleh lebih dari 100";
